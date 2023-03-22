@@ -86,6 +86,8 @@ const Home: NextPage = () => {
             current={page}
             onChange={(page) => {
               setPage(page);
+              //scroll to top when page change
+              window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
             }}
           />
         </div>
