@@ -1,10 +1,11 @@
-import AdminLayout from "@/components/AdminLayout";
+import AdminLayout from "@/layouts/AdminLayout";
 import { GET_ANIME_QUERY, Anime, PageInfo } from "@/utils/queries";
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
-import { Table, Pagination, type PaginationProps } from "antd";
+import { Table, Pagination, Alert } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { LinkOutlined } from '@ant-design/icons'
+import { LinkOutlined } from "@ant-design/icons";
+import Head from "next/head";
 const Home: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
@@ -13,11 +14,12 @@ const Home: NextPage = () => {
   const [page, setPage] = useState<number>(1);
   const [pageInfo, setPageInfo] = useState<PageInfo | undefined>();
 
-  const GRAPHQL_API = "https://graphql.anilist.co";
 
   const getAnimes = async () => {
     setLoading(true);
     try {
+      const GRAPHQL_API = "https://graphql.anilist.co";
+
       const response = await fetch(GRAPHQL_API, {
         method: "POST",
         headers: {
@@ -40,6 +42,11 @@ const Home: NextPage = () => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    getAnimes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
   const columns: ColumnsType<Anime> = [
     {
       title: "Title",
@@ -59,43 +66,55 @@ const Home: NextPage = () => {
     },
   ];
 
-  useEffect(() => {
-    getAnimes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+
 
   return (
-    <AdminLayout title="Action Anime Movies Released After 2020">
-      {error && <div>{error.message}</div>}
+    <>
+      <Head>
+        <title>AnimeZone</title>
+        <meta name="description" content="Action Anime Movies Released After 2020" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-      <Table
-        columns={columns}
-        bordered
-        dataSource={data}
-        rowKey="id"
-        loading={loading}
-        pagination={false}
-      />
+      <AdminLayout title="Action Anime Movies Released After 2020">
+        {/* Error message */}
+        {error && <Alert message={error.message} type="error" showIcon />}
 
-      {pageInfo && (
-        <div style={{ display: 'flex', marginTop: '20px', justifyContent: 'flex-end' }}>
-          <Pagination
-            total={pageInfo.total}
-            defaultCurrent={1}
-            responsive
-            showSizeChanger={false}
-            current={page}
-            onChange={(page) => {
-              setPage(page);
-              //scroll to top when page change
-              window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+        {/* Data table */}
+        <Table
+          columns={columns}
+          bordered
+          dataSource={data}
+          rowKey="id"
+          loading={loading}
+          pagination={false}
+        />
+
+        {/* pagination */}
+        {pageInfo && (
+          <div
+            style={{
+              display: "flex",
+              marginTop: "20px",
+              justifyContent: "flex-end",
             }}
-          />
-        </div>
-
-      )}
-
-    </AdminLayout>
+          >
+            <Pagination
+              total={pageInfo.total}
+              defaultCurrent={1}
+              responsive
+              showSizeChanger={false}
+              current={page}
+              onChange={(page) => {
+                setPage(page);
+                //scroll to top when page change
+                window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+              }}
+            />
+          </div>
+        )}
+      </AdminLayout>
+    </>
   );
 };
 
