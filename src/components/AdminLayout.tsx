@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
-import { HomeOutlined } from "@ant-design/icons";
+import {
+    HomeOutlined,
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
+} from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { useState } from "react";
 
@@ -42,6 +46,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <SideBar
+                trigger={null}
+                breakpoint="lg"
+                collapsedWidth="0"
                 collapsible
                 collapsed={collapsed}
                 onCollapse={(value) => setCollapsed(value)}
@@ -55,7 +62,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
                         alignItems: "center",
                     }}
                 >
-                    <h1 style={{ color: "#fff", fontSize: "25px" }}>{collapsed ? 'AZ' : 'AnimeZone'}</h1>
+                    <h1 style={{ color: "#fff", fontSize: "25px" }}>Anime<span style={{ color: "yellow" }}>Zone</span></h1>
                 </div>
                 <Menu
                     theme="dark"
@@ -65,20 +72,23 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
                 />
             </SideBar>
             <Layout className="site-layout">
-                <Content style={{ margin: "0 16px" }}>
+                <Header style={{ padding: "0px 20px", background: colorBgContainer }}>
+                    <div onClick={() => setCollapsed(!collapsed)} className="trigger" style={{ cursor: "pointer", fontSize: '20px' }}>
+                        {collapsed ? (<MenuUnfoldOutlined />) : (<MenuFoldOutlined />)}
+                    </div>
+                </Header>
+                <Content style={{ margin: "0 16px", padding: "10px 30px" }}>
                     <h1 style={{ padding: "20px 0px", fontSize: "30px" }}>{title}</h1>
                     <div
                         style={{
-                            padding: 24,
                             minHeight: 360,
-                            background: colorBgContainer,
                         }}
                     >
                         {children}
                     </div>
                 </Content>
-                <Footer style={{ textAlign: "center" }}>
-                    AnimeZone © 2023 Created by{" "}
+                <Footer style={{ textAlign: "center", marginTop: '20px' }}>
+                    AnimeZone © 2023 Created by&nbsp;
                     <Link
                         href="https://www.linkedin.com/in/michael-belete-8600a3176/"
                         target="_blank"

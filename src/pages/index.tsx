@@ -65,11 +65,12 @@ const Home: NextPage = () => {
   }, [page]);
 
   return (
-    <AdminLayout title="Home">
+    <AdminLayout title="Action Anime Movies Released After 2020">
       {error && <div>{error.message}</div>}
 
       <Table
         columns={columns}
+        bordered
         dataSource={data}
         rowKey="id"
         loading={loading}
