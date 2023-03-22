@@ -1,11 +1,12 @@
-import { GET_ANIME_QUERY } from "@/utils/queries";
+import { GET_ANIME_QUERY, Anime } from "@/utils/queries";
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<Anime[] | null>(null);
 
   const [page, setPage] = useState<number>(1);
 
@@ -37,7 +38,6 @@ const Home: NextPage = () => {
   };
 
 
-
   useEffect(() => {
     getAnimes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -49,9 +49,23 @@ const Home: NextPage = () => {
 
 
   return (
-    <div>
-      <pre>{JSON.stringify(data)}</pre>
-    </div>
+    <>
+      <ul>
+        {data && data.map((anime) => (
+          <li key={anime.id}>{anime.title.native}</li>
+        ))}
+      </ul>
+
+      <button onClick={() => {
+        if (page <= 1) return;
+        setPage(page - 1);
+      }} disabled={page <= 1}>Previous</button>
+      {page}
+      <button onClick={() => {
+        if (page < 1) return;
+        setPage(page + 1);
+      }}>Next</button>
+    </>
   );
 }
 
