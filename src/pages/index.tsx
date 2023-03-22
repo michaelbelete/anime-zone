@@ -1,15 +1,17 @@
 import AdminLayout from "@/components/AdminLayout";
-import { GET_ANIME_QUERY, Anime } from "@/utils/queries";
+import { GET_ANIME_QUERY, Anime, PageInfo } from "@/utils/queries";
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
+import { Table, Pagination, type PaginationProps } from "antd";
+import type { ColumnsType } from "antd/es/table";
 
 const Home: NextPage = () => {
-
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
-  const [data, setData] = useState<Anime[] | null>(null);
+  const [data, setData] = useState<Anime[] | undefined>();
 
   const [page, setPage] = useState<number>(1);
+  const [pageInfo, setPageInfo] = useState<PageInfo | undefined>();
 
   const GRAPHQL_API = "https://graphql.anilist.co";
 
@@ -28,44 +30,70 @@ const Home: NextPage = () => {
             page,
           },
         }),
-
       });
       const data = await response.json();
       setData(data.data.Page.media);
+      setPageInfo(data.data.Page.pageInfo);
     } catch (error) {
       setError(error as Error);
     }
     setLoading(false);
   };
 
+  const columns: ColumnsType<Anime> = [
+    {
+      title: "Native Title",
+      dataIndex: "title",
+      key: "title",
+      render: (item: Anime["title"]) => item.native,
+    },
+    {
+      title: "Site URL",
+      dataIndex: "siteUrl",
+      key: "siteUrl",
+      render: (text: string) => (
+        <a href={text} target="_blank">
+          {text}
+        </a>
+      ),
+    },
+  ];
 
   useEffect(() => {
     getAnimes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page])
+  }, [page]);
 
   return (
     <AdminLayout title="Home">
-      {loading && <div>Loading...</div>}
       {error && <div>{error.message}</div>}
-      <ul>
-        {data && data.map((anime) => (
-          <li key={anime.id}>{anime.title.native}</li>
-        ))}
-      </ul>
 
-      <button onClick={() => {
-        if (page <= 1) return;
-        setPage(page - 1);
-      }} disabled={page <= 1}>Previous</button>
-      {page}
-      <button onClick={() => {
-        if (page < 1) return;
-        setPage(page + 1);
-      }}>Next</button>
-    </AdminLayout>)
+      <Table
+        columns={columns}
+        dataSource={data}
+        rowKey="id"
+        loading={loading}
+        pagination={false}
+      />
 
+      {pageInfo && (
+        <div style={{ display: 'flex', marginTop: '20px', justifyContent: 'flex-end' }}>
+          <Pagination
+            total={pageInfo.total}
+            defaultCurrent={1}
+            responsive
+            showSizeChanger={false}
+            current={page}
+            onChange={(page) => {
+              setPage(page);
+            }}
+          />
+        </div>
 
-}
+      )}
+
+    </AdminLayout>
+  );
+};
 
 export default Home;
