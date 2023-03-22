@@ -14,7 +14,6 @@ const Home: NextPage = () => {
   const [page, setPage] = useState<number>(1);
   const [pageInfo, setPageInfo] = useState<PageInfo | undefined>();
 
-
   const getAnimes = async () => {
     setLoading(true);
     try {
@@ -66,13 +65,14 @@ const Home: NextPage = () => {
     },
   ];
 
-
-
   return (
     <>
       <Head>
         <title>AnimeZone</title>
-        <meta name="description" content="Action Anime Movies Released After 2020" />
+        <meta
+          name="description"
+          content="Action Anime Movies Released After 2020"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -88,6 +88,7 @@ const Home: NextPage = () => {
           rowKey="id"
           loading={loading}
           pagination={false}
+          scroll={{ x: 400 }}
         />
 
         {/* pagination */}
