@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { Table, Pagination, type PaginationProps } from "antd";
 import type { ColumnsType } from "antd/es/table";
-
+import { LinkOutlined } from '@ant-design/icons'
 const Home: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
@@ -42,18 +42,18 @@ const Home: NextPage = () => {
 
   const columns: ColumnsType<Anime> = [
     {
-      title: "Native Title",
+      title: "Title",
       dataIndex: "title",
       key: "title",
       render: (item: Anime["title"]) => item.native,
     },
     {
-      title: "Site URL",
+      title: "Link",
       dataIndex: "siteUrl",
       key: "siteUrl",
       render: (text: string) => (
         <a href={text} target="_blank">
-          {text}
+          {text} <LinkOutlined />
         </a>
       ),
     },
