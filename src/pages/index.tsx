@@ -1,3 +1,4 @@
+import { GET_ANIME_QUERY } from "@/utils/queries";
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 
@@ -9,18 +10,6 @@ const Home: NextPage = () => {
   const [page, setPage] = useState<number>(1);
 
   const GRAPHQL_API = "https://graphql.anilist.co";
-  const GET_ANIME_QUERY = `
-  query ($page: Int) {
-    Page(page: $page, perPage: 20) {
-     media(type: ANIME, startDate_greater: 2020, genre_in: "Action", sort: START_DATE) {
-       siteUrl
-       title {
-         native
-       }
-     }
-    }
-   }
-  `;
 
   const getAnimes = async () => {
     setLoading(true);
