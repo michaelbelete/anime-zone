@@ -1,3 +1,4 @@
+import AdminLayout from "@/components/AdminLayout";
 import { GET_ANIME_QUERY, Anime } from "@/utils/queries";
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
@@ -43,13 +44,10 @@ const Home: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page])
 
-  if (loading) return <div>Loading...</div>;
-
-  if (error) return <div>{error.message}</div>;
-
-
   return (
-    <>
+    <AdminLayout title="Home">
+      {loading && <div>Loading...</div>}
+      {error && <div>{error.message}</div>}
       <ul>
         {data && data.map((anime) => (
           <li key={anime.id}>{anime.title.native}</li>
@@ -65,8 +63,9 @@ const Home: NextPage = () => {
         if (page < 1) return;
         setPage(page + 1);
       }}>Next</button>
-    </>
-  );
+    </AdminLayout>)
+
+
 }
 
 export default Home;
