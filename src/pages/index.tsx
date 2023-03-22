@@ -1,3 +1,4 @@
+import Head from "next/head";
 import AdminLayout from "@/layouts/AdminLayout";
 import { GET_ANIME_QUERY, Anime, PageInfo } from "@/utils/queries";
 import type { NextPage } from "next";
@@ -5,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Table, Pagination, Alert } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { LinkOutlined } from "@ant-design/icons";
-import Head from "next/head";
+
 const Home: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
