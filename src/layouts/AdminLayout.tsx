@@ -41,7 +41,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const items: MenuItem[] = [getItem("Home", "1", <HomeOutlined />)];
+  const items: MenuItem[] = [
+    getItem(
+      "Home",
+      "1",
+      <Link href="/">
+        <HomeOutlined />
+      </Link>
+    ),
+  ];
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
